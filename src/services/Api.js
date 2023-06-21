@@ -21,7 +21,7 @@ export function Sigin(payload){
       
       var config = {
         method: 'post',
-        url: 'http://192.168.1.7:8000/api/login',
+        url: 'http://192.168.55.238:8000/api/login',
         headers: { 
           'Content-Type': 'application/json'
         },
@@ -30,8 +30,6 @@ export function Sigin(payload){
       
       return axios(config)
       .then(function (response) {
-        // console.log(JSON.stringify(response.data));
-        // JSON.stringify(response.data)
         return response.data
       })
       .catch(function (error) {

@@ -1,11 +1,14 @@
-import { Text, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
+import { useAuth } from "../contexts/AuthContexts";
 
 export default function HomeScreen(){
+    // const { user } = useAuth();
+    // console.log(user);
     return(
-      
-        <View f>
-            <Text>Home</Text>
-        </View>
-  
+        // <SafeAreaView>
+            <View>
+                <Text>Home</Text>
+            </View>
+        // </SafeAreaView>
     )
 }

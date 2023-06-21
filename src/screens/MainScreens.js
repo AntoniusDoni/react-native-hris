@@ -3,13 +3,16 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import LoginScreen from "./Auth/LoginScreen";
 import HomeScreen from "./HomeScreen";
+import { theme } from "./theme/theme";
+import Tabs from "./components/TabsButton";
 
 const Stack = createNativeStackNavigator()
-export default function MainScreen(){
+
+export default function MainScreen(navigationRef, drawer ){
     const { user } = useAuth()
     
     return (
-        <NavigationContainer>
+        <NavigationContainer >
         {
             user===null?(
                 <Stack.Navigator   
@@ -18,14 +21,7 @@ export default function MainScreen(){
                 <Stack.Screen name="Login" component={LoginScreen} />
                 </Stack.Navigator>
             ):(
-                <Stack.Navigator
-                     initialRouteName="HomeScreen"
-                    //  screenOptions={{
-                    //     header: (props) => <AppBar drawer={drawer} {...props} />,
-                    //   }}
-                >
-                    <Stack.Screen name="Dashboard" component={HomeScreen} />
-                </Stack.Navigator>
+                <Tabs></Tabs>
             )
         }
         </NavigationContainer>

@@ -1,11 +1,15 @@
 import { AppProvider } from "./src/contexts/AuthContexts";
-import {NavigationContainer} from "@react-navigation/native"
+import { createNavigationContainerRef} from "@react-navigation/native"
 import MainScreen from "./src/screens/MainScreens";
+import { useRef } from "react";
 
 export default function App() {
+  const drawer = useRef(null);
+
+  const navigationRef = createNavigationContainerRef();
   return (
     <AppProvider>
-          <MainScreen/>
+          <MainScreen navigationRef={navigationRef} drawer={drawer} />
     </AppProvider>
   );
 }

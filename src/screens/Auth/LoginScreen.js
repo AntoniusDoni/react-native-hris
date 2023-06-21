@@ -28,13 +28,11 @@ export default function LoginScreen({ navigation }) {
     }
     Sigin({email, password})
     .then((res) =>{
-        
-        console.log(res);
-        // persistUser({
-        //     ...res.user,
-        //     accessToken: res.token,
-        //     refreshToken: data.refreshToken,
-        //   })
+        persistUser({
+            ...res.user,
+            accessToken: res.authorization.token,
+            refreshToken: res.authorization.token,
+          })
     })
     .catch(errors => {
     //   setError(errors)
