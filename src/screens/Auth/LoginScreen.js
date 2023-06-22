@@ -64,6 +64,7 @@ export default function LoginScreen({ navigation }) {
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
+        autoCapitalize="none"
       />
       <View style={styles.forgotPassword}>
         <TouchableOpacity

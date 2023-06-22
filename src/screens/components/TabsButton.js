@@ -3,6 +3,7 @@ import HomeScreen from "../HomeScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { theme } from "../theme/theme";
 import ProfilerScreen from "../Profile/ProfileScreen";
+import LeavesScreen from "../Leaves/Leaves";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +50,7 @@ export default function Tabs() {
       />
       <Tab.Screen
         name="Pengajuan Cuti"
-        component={HomeScreen}
+        component={LeavesScreen}
         options={{
           tabBarLabel: "Cuti",
           tabBarIcon: ({ color }) => (
