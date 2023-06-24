@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { theme } from "../theme/theme";
 import ProfilerScreen from "../Profile/ProfileScreen";
 import LeavesScreen from "../Leaves/Leaves";
+import Attandace from "../Attandace/AttandaceScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,7 @@ export default function Tabs() {
       />
       <Tab.Screen
         name="Absensi"
-        component={HomeScreen}
+        component={Attandace}
         options={{
           tabBarLabel: "Absensi",
           tabBarIcon: ({ color }) => (
