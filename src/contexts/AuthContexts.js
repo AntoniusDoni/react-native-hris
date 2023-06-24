@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 // why im create this , maybe it cause
 // im think this singlethon call for 401 token timeout so it only call from one instance
 const axioInstance = axios.create()
-axios.defaults.baseURL = "http://192.168.1.4:8000/api"
+axios.defaults.baseURL = "http://192.168.39.145:8000/api"
 axios.defaults.headers={
   'Content-Type': 'application/json'
 }
