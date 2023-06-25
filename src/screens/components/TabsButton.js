@@ -4,8 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { theme } from "../theme/theme";
 import ProfilerScreen from "../Profile/ProfileScreen";
 import LeavesScreen from "../Leaves/Leaves";
-import Attandace from "../Attandace/AttandaceScreen";
-import AttandaceScreen from "../Attandace/AttandaceScreen";
 import AttendaceScreen from "../Attandace/AttendaceScreen";
 
 const Tab = createBottomTabNavigator();

@@ -81,9 +81,7 @@ export default function ProfilerScreen() {
 
       <View style={styles.menuWrapper}>
         <TouchableRipple
-          onPress={() => {
-            logout;
-          }}
+          onPress={logout}
         >
           <View style={styles.menuItem}>
             <Icon name="logout" color="#FF6347" size={25} />
