@@ -27,7 +27,7 @@ export default function LoginScreen({ navigation }) {
     }
     Sigin({email, password})
     .then((res) =>{
-      console.log("response",res)
+      // console.log("response",res)
         persistUser({
             ...res.user,
             accessToken: res.authorization.token,

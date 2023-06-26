@@ -5,11 +5,12 @@ import { theme } from "../theme/theme";
 import ProfilerScreen from "../Profile/ProfileScreen";
 import LeavesScreen from "../Leaves/Leaves";
 import AttendaceScreen from "../Attandace/AttendaceScreen";
+import { useAuth } from "../../contexts/AuthContexts";
 
 const Tab = createBottomTabNavigator();
 
 export default function Tabs() {
-  
+  const { user } = useAuth
   return (
     <Tab.Navigator
       initialRouteName="Home"

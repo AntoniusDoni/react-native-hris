@@ -14,18 +14,27 @@ axios.defaults.headers={
 
 const refreshAccessToken = (refreshToken) => {
   return axios({
-    method: 'PUT',
-    url: '/authentications',
+    method: 'GET',
+    url: '/v1/refresh-token',
     data: { refreshToken },
-  }).then((res) => res.data)
+  }).then((res) => {
+    // console.log("refres token",res);
+  return res.data}).catch(function(error){
+    console.log("refres token ERR",error);
+  })
 }
 
 const logoutApi = (refreshToken) => {
   return axios({
-    method: 'DELETE',
-    url: '/authentications',
-    data: { refreshToken },
-  }).then((res) => res.data)
+    method: 'GET',
+    url: '/v1/logout',
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + refreshToken,
+    },
+  }).then((res) => res.data).catch(function(error){
+    console.log("refres token ERR",error);
+  });
 }
 
 const userManager = {
@@ -49,8 +58,6 @@ const AuthContexts = React.createContext()
 
 function AppProvider(props) {
   const [user, setUser] = useState(null)
-
-
   const value = useMemo(
     () => ({
       user,
@@ -69,24 +76,27 @@ function AppProvider(props) {
       await axios.interceptors.response.use(
         (res) => res,
         async (error) => {
+         
           const {
             status,
             data: { message },
           } = error.response
-          if (status === 401 && message === 'Unauthenticated.') {
+          // console.log("contex",status === 401 && message === 'Token cannot be refreshed, please Login again');
+          if (status === 401 && message === 'Token cannot be refreshed, please Login again') {
+           
+            userManager.remove()
             setUser(null)
-            return
           }
 
-          if (status === 401 && message === 'Token maximum age exceeded') {
+          if (status === 401 && message === 'Token is Expired') {
             const originalRequest = error.config
             originalRequest._retry = true
             const user = await userManager.get()
 
             const { refreshToken } = user
             const res = await refreshAccessToken(refreshToken)
+          
             const newUser = { ...user, accessToken: res.data.accessToken }
-
             setUser(newUser)
             userManager.set(JSON.stringify(newUser))
             axios.defaults.headers.common[
@@ -130,7 +140,7 @@ function useAuth() {
   }
 
   const logout = () => {
-    // logoutApi(user.refreshToken)
+    logoutApi(user.refreshToken)
     userManager.remove()
     setUser(null)
     

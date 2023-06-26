@@ -1,35 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
-import * as TaskManager from "expo-task-manager";
+import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import { StyleSheet, SafeAreaView, View, Button, Alert } from "react-native";
+import { StyleSheet, SafeAreaView, View, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { FAB } from "react-native-paper";
-import { Attendace } from "../../services/Api";
+import { Attendace, Attendaceout, GetAtendace } from "../../services/Api";
 import { formatTimeDB, formatDateDB } from "../utils";
 import { useAuth } from "../../contexts/AuthContexts";
-
+import Button from "../components/Button";
+import { out } from "react-native/Libraries/Animated/Easing";
 const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
 
-// Define the background task for location tracking
-TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
-  if (error) {
-    console.error(error);
-    return;
-  }
-  if (data) {
-    // Extract location coordinates from data
-    const { locations } = data;
-    const location = locations[0];
-    if (location) {
-      console.log("Location in background", location.coords);
-    }
-  }
-});
-
 const AttendaceScreen = () => {
-  // const mapRef = useRef(null);
   const [position, setPosition] = useState(null);
+  const [isAttendace, setAttendace] = useState(null);
   const [region, setRegion] = useState({
     latitude: -0.5023114,
     longitude: 117.1516973,
@@ -37,25 +20,58 @@ const AttendaceScreen = () => {
     longitudeDelta: 0.0021,
   });
   const { user } = useAuth();
-  const submit = () => {
-    if (position == null) {
-      startTrack();
-    } else {
-      return Alert.alert(
-        "Konfirmasi Absensi",
-        "Apakah Anda akan melakukan Absensi",
-        [
-          // The "Yes" button
-          {
-            text: "Yes",
-            onPress: () => {
-              let date = new Date();
-              let latitude = position?.latitude;
-              let longitude = position?.longitude;
-              let date_at = formatDateDB(date);
-              let time_attendance = formatTimeDB(date);
-             
+  let date = new Date();
+  let date_at = formatDateDB(date);
+  let time_attendance = formatTimeDB(date);
 
+  const fetch = async (params, refresh = false) => {
+    await GetAtendace(user.accessToken, {
+      ...params,
+      date_at: date_at,
+      employee_id: user?.id,
+    })
+      .then((res) => {
+       setAttendace({flag:res.flag,out:res.attendace.is_out});
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
+  }
+
+  const sendAttendaceIn=async()=>{
+    let labelAttendace="Masuk";
+   
+    if(isAttendace.flag==="2"){
+      labelAttendace="Pulang";
+    }
+    return Alert.alert(
+      "Konfirmasi Absensi",
+      "Apakah Anda akan melakukan Absensi "+labelAttendace,
+      [
+        // The "Yes" button
+        {
+          text: "Yes",
+          onPress: () => {
+            let latitude = position?.latitude;
+            let longitude = position?.longitude;
+            if(isAttendace.flag==="2"){
+              Attendaceout({
+                latitude,
+                longitude,
+                date_at,
+                time_attendance,
+                user,
+              })
+              .then((res) => {
+                console.log(res);
+                return Alert.alert("Berhasil !",res.message)
+  
+              }).catch(errors => {
+                //   setError(errors)
+                  console.log("err",errors);
+                  return Alert.alert("Gagal !","Periksa Kembali Koneksi jaringan anda")
+                });
+            }else{
               Attendace({
                 latitude,
                 longitude,
@@ -66,31 +82,39 @@ const AttendaceScreen = () => {
               .then((res) => {
                 console.log(res);
                 return Alert.alert("Berhasil !",res.message)
-
+  
               }).catch(errors => {
                 //   setError(errors)
                   console.log("err",errors);
+                  return Alert.alert("Gagal !","Periksa Kembali Koneksi jaringan anda")
                 });
-            },
+            }
+           
           },
-          {
-            text: "No",
-          },
-        ]
-      );
+        },
+        {
+          text: "No",
+        },
+      ]
+    );
+  }
+  const submit = () => {
+    if (position == null) {
+      startTrack();
+    } else{
+      sendAttendaceIn();
     }
+    
   };
   const startTrack = async () => {
     // Check if foreground permission is granted
     const { granted } = await Location.getForegroundPermissionsAsync();
     if (!granted) {
       console.log("location tracking denied");
-      return;
+      // return;s
     }
-
     // Make sure that foreground location tracking is not running
     foregroundSubscription?.remove();
-
     // Start watching position in real-time
     foregroundSubscription = await Location.watchPositionAsync(
       {
@@ -109,25 +133,30 @@ const AttendaceScreen = () => {
         // mapRef.current.animateToRegion(setRegion(newRegion), 3 * 1000);
         setRegion(newRegion);
         setPosition(location.coords);
-
+        sendAttendaceIn();
+        
         // foregroundSubscription?.remove();
       }
     );
   };
 
-  // useEffect(() => {
-  //   const requestPermissions = async () => {
-  //     const foreground = await Location.requestForegroundPermissionsAsync();
-  //     if (foreground.granted)
-  //       await Location.requestForegroundPermissionsAsync();
-  //   };
-  //   requestPermissions();
-  // }, []);
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const foreground = await Location.requestForegroundPermissionsAsync()
+      if (foreground.granted.status!='granted'){
+        await Location.enableNetworkProviderAsync().then().catch(function (error){
+          console.log(error)
+          requestPermissions();
+        })
+       
+      } 
+    }
+    requestPermissions()
+  }, [])
 
-  // useEffect(() => {
-  //   startTrack();
-  // }, [position]);
-  // console.log("location",position)
+useEffect(()=>{
+  fetch();
+},[isAttendace])
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -148,16 +177,15 @@ const AttendaceScreen = () => {
           )}
         </MapView>
       </View>
-      <View style={styles.mylocation}>
-        <FAB
-          icon="plus"
-          style={styles.fab}
-          color={"white"}
-          onPress={startTrack}
-        />
-      </View>
-      <View>
-        <Button onPress={submit} title="Absen" />
+      <View style={styles.buttonSection}>
+        {/* {isAttendace?.out===null&&isAttendace!=null&&( */}
+          <Button mode="contained" 
+          onPress={()=>{isAttendace?.out===null?submit:""}} 
+          disabled={isAttendace?.out===null?true:false}
+          style={{alignItems:'center',justifyContent:'center',width:'50%'}}>
+            Absen 
+        {isAttendace?.flag==2?" Pulang":" Masuk"}</Button>
+        
       </View>
     </SafeAreaView>
   );
@@ -181,5 +209,16 @@ const styles = StyleSheet.create({
     margin: 16,
     backgroundColor: "#dc143c",
   },
+  buttonSection:{
+      bottom: 5,
+      width: '100%',
+      height: '10%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'transparent',
+      position: "absolute",
+      // flex:1
+  },
+  
 });
 export default AttendaceScreen;
