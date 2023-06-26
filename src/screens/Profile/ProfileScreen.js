@@ -6,7 +6,6 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
-
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../../contexts/AuthContexts";
 

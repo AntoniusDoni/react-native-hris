@@ -6,11 +6,11 @@ import Tabs from "./components/TabsButton";
 
 const Stack = createNativeStackNavigator()
 
-export default function MainScreen(props){
+export default function MainScreen({ navigationRef, drawer }){
     const { user } = useAuth()
     // console.log(props)
     return (
-        <NavigationContainer >
+        <NavigationContainer ref={navigationRef}>
         {
             user===null?(
                 <Stack.Navigator   

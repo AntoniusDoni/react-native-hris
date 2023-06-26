@@ -17,6 +17,9 @@ export const formatDateTime = (date) => {
 export const dateToString = (date) => {
     return moment(date).format("MM/DD/yyyy");
 };
+export const TimeToString = (date) => {
+    return moment(date).format("HH:mm");
+};
 
 export const converToDate = (date) => {
     if (isEmpty(date) == false) {

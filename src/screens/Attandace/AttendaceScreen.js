@@ -19,7 +19,7 @@ const AttendaceScreen = (navigation) => {
     latitudeDelta: 0.0022,
     longitudeDelta: 0.0021,
   });
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const { user } = useAuth();
   let date = new Date();
   let date_at = formatDateDB(date);
@@ -46,7 +46,7 @@ const AttendaceScreen = (navigation) => {
       employee_id: user?.id,
     })
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         if(res.status===201){
           Alert.alert("Info ",res.data.message)
         }
