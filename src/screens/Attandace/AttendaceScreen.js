@@ -1,37 +1,56 @@
 import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import { StyleSheet, SafeAreaView, View, Alert } from "react-native";
+import { StyleSheet, SafeAreaView, View, Alert,ScrollView,RefreshControl } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { Attendace, Attendaceout, GetAtendace } from "../../services/Api";
+import { Attendace, Attendaceout, GetAtendace, GetSchedule } from "../../services/Api";
 import { formatTimeDB, formatDateDB } from "../utils";
 import { useAuth } from "../../contexts/AuthContexts";
 import Button from "../components/Button";
-import { out } from "react-native/Libraries/Animated/Easing";
 const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
 
-const AttendaceScreen = () => {
+const AttendaceScreen = (navigation) => {
   const [position, setPosition] = useState(null);
   const [isAttendace, setAttendace] = useState(null);
+  const [schedule, setSchedule] = useState(null);
   const [region, setRegion] = useState({
     latitude: -0.5023114,
     longitude: 117.1516973,
     latitudeDelta: 0.0022,
     longitudeDelta: 0.0021,
   });
+  const [refreshing, setRefreshing] = React.useState(false);
   const { user } = useAuth();
   let date = new Date();
   let date_at = formatDateDB(date);
   let time_attendance = formatTimeDB(date);
 
-  const fetch = async (params, refresh = false) => {
-    await GetAtendace(user.accessToken, {
+  const fetch =  (params, refresh = false) => {
+     GetAtendace(user.accessToken, {
       ...params,
       date_at: date_at,
       employee_id: user?.id,
     })
       .then((res) => {
        setAttendace({flag:res.flag,out:res.attendace.is_out});
+      })
+      .catch((err) => {
+        // console.log(err)
+      })
+  }
+
+  const fetchSchedule=  (params, refresh = false) => {
+     GetSchedule(user.accessToken, {
+      ...params,
+      date_at: date_at,
+      employee_id: user?.id,
+    })
+      .then((res) => {
+        console.log(res)
+        if(res.status===201){
+          Alert.alert("Info ",res.data.message)
+        }
+        setSchedule({message:res.data.message,detailSchedule:res.data.schedule});
       })
       .catch((err) => {
         // console.log(err)
@@ -153,15 +172,33 @@ const AttendaceScreen = () => {
     }
     requestPermissions()
   }, [])
-
+const onRefresh=()=>{
+  setRefreshing(true);
+  fetch();
+  fetchSchedule();
+  setTimeout(() => {
+    setRefreshing(false);
+  }, 2000);
+}
 useEffect(()=>{
   fetch();
-},[isAttendace])
+},[]);
+
+useEffect(()=>{
+  fetchSchedule();
+},[])
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
+      <ScrollView 
+       contentContainerStyle={styles.scrollView}
+       refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
+      
+     
         <MapView
-          // ref={mapRef}
+         
           region={region}
           initRegion={region}
           style={styles.map}
@@ -176,17 +213,19 @@ useEffect(()=>{
             />
           )}
         </MapView>
-      </View>
+     
       <View style={styles.buttonSection}>
-        {/* {isAttendace?.out===null&&isAttendace!=null&&( */}
+        {schedule?.detailSchedule!=null&&(
           <Button mode="contained" 
           onPress={()=>{isAttendace?.out===null?submit:""}} 
           disabled={isAttendace?.out===null?true:false}
           style={{alignItems:'center',justifyContent:'center',width:'50%'}}>
             Absen 
-        {isAttendace?.flag==2?" Pulang":" Masuk"}</Button>
-        
+        {isAttendace?.flag==2?" Pulang":" Masuk"}
+        </Button>
+        )}
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -194,9 +233,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   map: {
+    flex:1,
     width: "100%",
-    height: "100%",
+    height: "50%",
   },
   mylocation: {
     alignItems: "center",

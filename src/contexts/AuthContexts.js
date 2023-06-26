@@ -2,7 +2,8 @@ import React, { useState, useMemo, useContext, useEffect } from 'react'
 import is from 'is_js'
 import axios from 'axios'
 // import Constants from 'expo-constants'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {  Alert } from "react-native";
 
 // why im create this , maybe it cause
 // im think this singlethon call for 401 token timeout so it only call from one instance
@@ -83,7 +84,7 @@ function AppProvider(props) {
           } = error.response
           // console.log("contex",status === 401 && message === 'Token cannot be refreshed, please Login again');
           if (status === 401 && message === 'Token cannot be refreshed, please Login again') {
-           
+            return Alert.alert("Koneksi Internet Terputus Silahkan Login Kembali")
             userManager.remove()
             setUser(null)
           }

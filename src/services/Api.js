@@ -38,6 +38,24 @@ export function GetAtendace(accessToken,params) {
       throw error;
     });
 }
+export function GetSchedule(accessToken,params) {
+  return axios({
+    method: "get",
+    url: `v1/schedule?${qs.stringify(params)}`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + accessToken,
+    },
+  })
+    .then(function (response) {
+      const resp={status:response.status,data:response.data}
+      return resp;
+    })
+    .catch(function (error) {
+      // console.log("Api fecth",error);
+      throw error;
+    });
+}
 export function Attendace(payload) {
   var data = JSON.stringify({
     date_at: payload.date_at,
