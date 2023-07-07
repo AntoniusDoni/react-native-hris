@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Alert } from "react-native";
 import qs from 'query-string'
+import { dateToStringLocal } from "../helpers/utils";
 
 export function Sigin(payload) {
   const { email, password } = payload;
@@ -94,6 +95,32 @@ export function Attendaceout(payload) {
   return axios({
     method: "post",
     url: "/v1/attendaceout",
+    data: data,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + payload.user.accessToken,
+    },
+  })
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      // console.log(error);
+      throw error;
+    });
+}
+
+export function AddLeaves(payload){
+  var data = JSON.stringify({
+    date_start: dateToStringLocal(payload.date_at),
+    date_end: dateToStringLocal(payload.date_out),
+    employee_id: payload?.user?.id,
+    
+  });
+console.log(data);
+  return axios({
+    method: "post",
+    url: "/v1/leaves",
     data: data,
     headers: {
       "Content-Type": "application/json",

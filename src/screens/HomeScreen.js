@@ -6,19 +6,13 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import {
-  Avatar,
-  Title,
-  Caption,
-  Text,
-  TouchableRipple,
-} from "react-native-paper";
+import { Avatar, Title, Caption, Text, Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../contexts/AuthContexts";
 import { GetSchedule } from "../services/Api";
 import { formatDateDB } from "./utils";
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const { user } = useAuth();
   const [schedule, setSchedule] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -55,6 +49,8 @@ export default function HomeScreen() {
   useEffect(() => {
     fetchSchedule();
   }, []);
+  // console.log(user.role)
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -158,6 +154,13 @@ export default function HomeScreen() {
             </Caption>
           </View>
         </View>
+        <View style={styles.menuItem}>
+            <Button  icon="account" mode="elevated" 
+            labelStyle={{ color: "#333"}}
+            contentStyle={styles.menuButton} onPress={() => navigation.navigate('Cuti Screen')}>
+              Riwayat Absensi
+            </Button>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -165,7 +168,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 10,
+    backgroundColor: "whitesmoke",
   },
   userInfoSection: {
     // paddingHorizontal: 5,
@@ -207,6 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 15,
     paddingHorizontal: 30,
+    justifyContent:"space-between",
   },
   menuItemText: {
     color: "#777777",
@@ -214,5 +218,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
     lineHeight: 26,
+  },
+  menuButton:{
+    marginVertical: 10,
+    marginRight:5,
+    justifyContent: 'center',
+    alignItems: 'center',
+   
+
   },
 });

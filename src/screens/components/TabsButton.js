@@ -6,32 +6,33 @@ import ProfilerScreen from "../Profile/ProfileScreen";
 import LeavesScreen from "../Leaves/Leaves";
 import AttendaceScreen from "../Attandace/AttendaceScreen";
 import { useAuth } from "../../contexts/AuthContexts";
+import HomeStackScreen from "./HomeStack";
 
 const Tab = createBottomTabNavigator();
 
 export default function Tabs() {
-  const { user } = useAuth
+  const { user } = useAuth;
+
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      activeColor="#e91e63"
-      style={{ backgroundColor: "tomato" }}
-      
-    >
+    <Tab.Navigator initialRouteName="Home" activeColor="#e91e63" style={{ backgroundColor: "tomato" }}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackScreen}
         options={{
           tabBarLabel: "Halaman Utama",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={theme.colors.primary} size={29} />
+            <MaterialCommunityIcons
+              name="home"
+              color={theme.colors.primary}
+              size={27}
+            />
           ),
-          tabBarActiveTintColor:'#e91e63',
-          tabBarInactiveTintColor:'#888',
-          tabBarLabelStyle:{
-            fontSize:12,
-            padding:5
-          }
+          tabBarActiveTintColor: "#e91e63",
+          tabBarInactiveTintColor: "#888",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            padding: 5,
+          },
         }}
       />
       <Tab.Screen
@@ -40,14 +41,18 @@ export default function Tabs() {
         options={{
           tabBarLabel: "Absensi",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="calendar-account" color={theme.colors.primary} size={26} />
+            <MaterialCommunityIcons
+              name="calendar-account"
+              color={theme.colors.primary}
+              size={26}
+            />
           ),
-          tabBarActiveTintColor:'#e91e63',
-          tabBarInactiveTintColor:'#888',
-          tabBarLabelStyle:{
-            fontSize:12,
-            padding:5
-          }
+          tabBarActiveTintColor: "#e91e63",
+          tabBarInactiveTintColor: "#888",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            padding: 5,
+          },
         }}
       />
       <Tab.Screen
@@ -56,14 +61,18 @@ export default function Tabs() {
         options={{
           tabBarLabel: "Cuti",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account-arrow-left" color={theme.colors.primary} size={26} />
+            <MaterialCommunityIcons
+              name="account-arrow-left"
+              color={theme.colors.primary}
+              size={26}
+            />
           ),
-          tabBarActiveTintColor:'#e91e63',
-          tabBarInactiveTintColor:'#888',
-          tabBarLabelStyle:{
-            fontSize:12,
-            padding:5
-          }
+          tabBarActiveTintColor: "#e91e63",
+          tabBarInactiveTintColor: "#888",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            padding: 5,
+          },
         }}
       />
       <Tab.Screen
@@ -72,17 +81,20 @@ export default function Tabs() {
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account-box" color={theme.colors.primary} size={26} />
+            <MaterialCommunityIcons
+              name="account-box"
+              color={theme.colors.primary}
+              size={26}
+            />
           ),
-          tabBarActiveTintColor:'#e91e63',
-          tabBarInactiveTintColor:'#888',
-          tabBarLabelStyle:{
-            fontSize:12,
-            padding:5
-          }
+          tabBarActiveTintColor: "#e91e63",
+          tabBarInactiveTintColor: "#888",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            padding: 5,
+          },
         }}
       />
-      
     </Tab.Navigator>
   );
 }

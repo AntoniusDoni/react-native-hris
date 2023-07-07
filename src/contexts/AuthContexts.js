@@ -8,7 +8,7 @@ import {  Alert } from "react-native";
 // why im create this , maybe it cause
 // im think this singlethon call for 401 token timeout so it only call from one instance
 const axioInstance = axios.create()
-axios.defaults.baseURL = "http://192.168.1.7:8000/api"
+axios.defaults.baseURL = "http://192.168.1.3:8000/api"
 axios.defaults.headers={
   'Content-Type': 'application/json'
 }
@@ -84,9 +84,10 @@ function AppProvider(props) {
           } = error.response
           // console.log("contex",status === 401 && message === 'Token cannot be refreshed, please Login again');
           if (status === 401 && message === 'Token cannot be refreshed, please Login again') {
-            return Alert.alert("Koneksi Internet Terputus Silahkan Login Kembali")
             userManager.remove()
             setUser(null)
+            return Alert.alert("Koneksi Internet Terputus Silahkan Login Kembali")
+           
           }
 
           if (status === 401 && message === 'Token is Expired') {

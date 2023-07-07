@@ -5,12 +5,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment/moment";
 // import InputDateTimePicker from "../components/InputDateTimePicker";
 import Button from "../components/Button";
+import { AddLeaves } from "../../services/Api";
+import { useAuth } from "../../contexts/AuthContexts";
 export default function LeavesScreen() {
   const [date_at, setDateAt] = useState(new Date());
   const [date_out, setDateOut] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDatePickerVisible2, setDatePickerVisibility2] = useState(false);
-
+  const { user } = useAuth();
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -36,7 +38,19 @@ export default function LeavesScreen() {
         {
           text: "Yes",
           onPress: () => {
-            // setShowBox(false);
+              AddLeaves({
+                date_at,
+                date_out,
+                user,
+              }).then((res) => {
+                console.log(res);
+                return Alert.alert("Berhasil !",res.message)
+  
+              }).catch(errors => {
+                //   setError(errors)
+                  console.log("err",errors);
+                  return Alert.alert("Gagal !","Periksa Kembali Koneksi jaringan anda")
+                });
           },
         },
         {
@@ -44,7 +58,9 @@ export default function LeavesScreen() {
         },
       ]
     );
-
+  }
+  const addLeaves=()=>{
+    
   }
   return (
     <SafeAreaView>

@@ -82,12 +82,12 @@ const AttendaceScreen = (navigation) => {
                 user,
               })
               .then((res) => {
-                console.log(res);
+                // console.log(res);
                 return Alert.alert("Berhasil !",res.message)
   
               }).catch(errors => {
                 //   setError(errors)
-                  console.log("err",errors);
+                  // console.log("err",errors);
                   return Alert.alert("Gagal !","Periksa Kembali Koneksi jaringan anda")
                 });
             }else{
