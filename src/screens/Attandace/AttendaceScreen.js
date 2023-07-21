@@ -6,7 +6,6 @@ import { Attendace, Attendaceout, GetAtendace, GetSchedule } from "../../service
 import { formatTimeDB, formatDateDB } from "../utils";
 import { useAuth } from "../../contexts/AuthContexts";
 import Button from "../components/Button";
-const LOCATION_TASK_NAME = "LOCATION_TASK_NAME";
 let foregroundSubscription = null;
 
 const AttendaceScreen = (navigation) => {
@@ -32,10 +31,11 @@ const AttendaceScreen = (navigation) => {
       employee_id: user?.id,
     })
       .then((res) => {
-       setAttendace({flag:res.flag,out:res.attendace.is_out});
+        console.log(res);
+       setAttendace({flag:res.flag,out:res.attendace?.is_out});
       })
       .catch((err) => {
-        // console.log(err)
+        console.log(err)
       })
   }
 
@@ -82,12 +82,12 @@ const AttendaceScreen = (navigation) => {
                 user,
               })
               .then((res) => {
-                // console.log(res);
+                console.log(res);
                 return Alert.alert("Berhasil !",res.message)
   
               }).catch(errors => {
                 //   setError(errors)
-                  // console.log("err",errors);
+                  console.log("err",errors);
                   return Alert.alert("Gagal !","Periksa Kembali Koneksi jaringan anda")
                 });
             }else{
@@ -217,11 +217,11 @@ useEffect(()=>{
       <View style={styles.buttonSection}>
         {schedule?.detailSchedule!=null&&(
           <Button mode="contained" 
-          onPress={()=>{isAttendace?.out===null?submit:""}} 
-          disabled={isAttendace?.out===null?true:false}
+          onPress={submit} 
+          disabled={isAttendace?.out!=null?true:false}
           style={{alignItems:'center',justifyContent:'center',width:'50%'}}>
             Absen 
-        {isAttendace?.flag==2?" Pulang":" Masuk"}
+         {isAttendace?.flag==2?" Pulang":" Masuk"}
         </Button>
         )}
       </View>

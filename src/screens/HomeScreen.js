@@ -40,7 +40,6 @@ export default function HomeScreen({navigation}) {
   };
   const onRefresh = () => {
     setRefreshing(true);
-    fetch();
     fetchSchedule();
     setTimeout(() => {
       setRefreshing(false);
