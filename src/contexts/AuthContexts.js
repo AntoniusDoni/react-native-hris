@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useContext, useEffect } from 'react'
 import is from 'is_js'
 import axios from 'axios'
-// import Constants from 'expo-constants'
+import Constants from 'expo-constants'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  Alert } from "react-native";
 
 // why im create this , maybe it cause
 // im think this singlethon call for 401 token timeout so it only call from one instance
 const axioInstance = axios.create()
-axios.defaults.baseURL = "http://192.168.1.3:8000/api"
+axios.defaults.baseURL = Constants.manifest.extra.api_url
 axios.defaults.headers={
   'Content-Type': 'application/json'
 }
@@ -24,6 +24,8 @@ const refreshAccessToken = (refreshToken) => {
     console.log("refres token ERR",error);
   })
 }
+
+
 
 const logoutApi = (refreshToken) => {
   return axios({
@@ -54,6 +56,7 @@ const userManager = {
     await AsyncStorage.removeItem('HRIS_USER')
   },
 }
+
 
 const AuthContexts = React.createContext()
 
@@ -106,7 +109,6 @@ function AppProvider(props) {
             ] = `Bearer ${res.data.accessToken}`
             return axioInstance(originalRequest)
           }
-
           throw error
         }
       )

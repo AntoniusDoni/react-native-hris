@@ -25,7 +25,7 @@ export default function HomeScreen({navigation}) {
       employee_id: user?.id,
     })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.status === 201) {
           Alert.alert("Info ", res.data.message);
         }
@@ -89,7 +89,7 @@ export default function HomeScreen({navigation}) {
               <View style={[styles.row, { flex: 3, marginLeft: 10 }]}>
                 <Icon name="phone" color="#555" size={20} />
                 <Text style={{ color: "#555", marginLeft: 20 }}>
-                  {user?.phone == null && "-"}
+                {user?.phone ==null ?" -- " : user?.phone}
                 </Text>
               </View>
               <View style={[styles.row, { flex: 4, marginLeft: 10 }]}>
@@ -154,9 +154,10 @@ export default function HomeScreen({navigation}) {
           </View>
         </View>
         <View style={styles.menuItem}>
+           
             <Button  icon="account" mode="elevated" 
             labelStyle={{ color: "#333"}}
-            contentStyle={styles.menuButton} onPress={() => navigation.navigate('Cuti Screen')}>
+            contentStyle={styles.menuButton} onPress={() => navigation.navigate('Riwayat Absensi')}>
               Riwayat Absensi
             </Button>
         </View>

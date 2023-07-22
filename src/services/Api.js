@@ -40,6 +40,7 @@ export function GetAtendace(accessToken,params) {
     });
 }
 export function GetSchedule(accessToken,params) {
+  // console.log(params)
   return axios({
     method: "get",
     url: `v1/schedule?${qs.stringify(params)}`,
@@ -117,7 +118,7 @@ export function AddLeaves(payload){
     employee_id: payload?.user?.id,
     
   });
-console.log(data);
+// console.log(data);
   return axios({
     method: "post",
     url: "/v1/leaves",
@@ -134,4 +135,25 @@ console.log(data);
       // console.log(error);
       throw error;
     });
+}
+
+export function GetHistoryAttendace(accessToken,params) {
+  // console.log(params)
+  return axios({
+    method: "get",
+    url: `v1/history-attendace?${qs.stringify(params)}`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + accessToken,
+    },
+  })
+    .then(function (response) {
+      const resp={status:response.status,data:response.data}
+      return resp;
+    })
+    .catch(function (error) {
+      // console.log("Api fecth",error);
+      throw error;
+    });
+
 }

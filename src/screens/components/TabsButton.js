@@ -14,11 +14,12 @@ export default function Tabs() {
   const { user } = useAuth;
 
   return (
-    <Tab.Navigator initialRouteName="Home" activeColor="#e91e63" style={{ backgroundColor: "tomato" }}>
+    <Tab.Navigator initialRouteName="Home" activeColor="#e91e63" style={{ backgroundColor: "tomato" }} >
       <Tab.Screen
         name="Home"
         component={HomeStackScreen}
         options={{
+          headerShown:false,
           tabBarLabel: "Halaman Utama",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons

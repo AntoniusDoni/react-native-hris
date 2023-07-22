@@ -21,6 +21,10 @@ export const TimeToString = (date) => {
     return moment(date).format("HH:mm");
 };
 
+export const MonthToString = (date) => {
+    return moment(date).format("yyyy-MM");
+};
+
 export const converToDate = (date) => {
     if (isEmpty(date) == false) {
         return new Date(date);
